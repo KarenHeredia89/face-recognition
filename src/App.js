@@ -64,7 +64,7 @@ export default function App() {
   const onSubmit = () => {
     setImageURL(input)
       
-    fetch('http://localhost:3000/imageurl', {
+    fetch('https://face-recognition-api-iucp.onrender.com/imageurl', {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -75,7 +75,7 @@ export default function App() {
       .then(result => displayFaceBox(calculateRegions(result)))
       .catch(err => console.log(err))
 
-    fetch('http://localhost:3000/image', {
+    fetch('https://face-recognition-api-iucp.onrender.com/image', {
       method: 'put',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
