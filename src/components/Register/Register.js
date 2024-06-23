@@ -15,7 +15,7 @@ export default function Register(props) {
         setPassword(e.target.value)
     };
     const onSubmitRegister = () => {
-        fetch('http://localhost:3000/register', {
+        fetch('https://face-recognition-api-iucp.onrender.com/register', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
