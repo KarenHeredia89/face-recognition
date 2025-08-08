@@ -1,10 +1,10 @@
 const Rank = ({ name, entries }: { name: string; entries: number }) => {
   return (
-    <div>
-      <div className="white f3 center tc">
+    <div className="flex flex-col items-center gap-4">
+      <div className="text-2xl">
         {`${name}, your current entry count is...`}
       </div>
-      <div className="white f3 center tc">{entries}</div>
+      <div className="text-violet-500 text-4xl font-bold">{entries}</div>
     </div>
   );
 };

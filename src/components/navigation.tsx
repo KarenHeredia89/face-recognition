@@ -5,35 +5,27 @@ const Navigation = ({
   onRouteChange: (route: string) => void;
   isSignedIn: boolean;
 }) => {
-  if (isSignedIn) {
-    return (
-      <nav style={{ display: "flex", justifyContent: "flex-end" }}>
-        <p
-          onClick={() => onRouteChange("signin")}
-          className="f3 link dim white underline pa3 pointer"
-        >
+  return (
+    <nav className="flex justify-end items-center gap-4 px-6 bg-slate-900 text-white h-9">
+      {isSignedIn ? (
+        <p onClick={() => onRouteChange("signin")} className="cursor-pointer">
           Sign Out
         </p>
-      </nav>
-    );
-  } else {
-    return (
-      <nav style={{ display: "flex", justifyContent: "flex-end" }}>
-        <p
-          onClick={() => onRouteChange("signin")}
-          className="f3 link dim white underline pa3 pointer"
-        >
-          Sign In
-        </p>
-        <p
-          onClick={() => onRouteChange("register")}
-          className="f3 link dim white underline pa3 pointer"
-        >
-          Register
-        </p>
-      </nav>
-    );
-  }
+      ) : (
+        <>
+          <p onClick={() => onRouteChange("signin")} className="cursor-pointer">
+            Sign In
+          </p>
+          <p
+            onClick={() => onRouteChange("register")}
+            className="cursor-pointer"
+          >
+            Register
+          </p>
+        </>
+      )}
+    </nav>
+  );
 };
 
 export default Navigation;

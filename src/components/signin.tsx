@@ -1,4 +1,5 @@
 import { useState } from "react";
+import brain from "@/assets/brain.png";
 
 export default function Signin({
   onRouteChange,
@@ -18,6 +19,10 @@ export default function Signin({
   };
 
   const onSubmitSignIn = () => {
+    if (!signInEmail || !signInPassword) {
+      alert("Please enter your email and password");
+      return;
+    }
     fetch("http://localhost:8000/signin", {
       method: "post",
       headers: { "Content-Type": "application/json" },
@@ -36,32 +41,37 @@ export default function Signin({
   };
 
   return (
-    <article
-      className="center br3 ba b--black-10 mv4 w-100 w-50-m w-25-l shadow-5"
-      style={{ margin: "auto" }}
-    >
-      <main className="pa4">
-        <div className="measure tc">
-          <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
-            <legend className="f1 fw6 ph0 mh0">Sign In</legend>
-            <div className="mt3">
-              <label className="db fw6 lh-copy f6" htmlFor="email-address">
+    <article className="flex justify-center items-center h-full text-white p-6">
+      <main className="p-6 rounded-md bg-slate-900 w-full">
+        <div className="flex flex-col gap-4">
+          <img src={brain} alt="logo" style={{ width: "60px" }} />
+          <fieldset id="sign_up" className="flex flex-col gap-6">
+            <legend className="text-2xl text-violet-500 font-bold mb-2">
+              Login to your account
+            </legend>
+            <p className="text-sm text-slate-400">
+              Please enter your email and password to login to your account.
+            </p>
+            <div className="flex flex-col gap-2">
+              <label className="text-sm" htmlFor="email-address">
                 Email
               </label>
               <input
                 onChange={onEmailChange}
-                className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
+                className="p-2 rounded-md bg-slate-950 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-violet-500"
+                placeholder="Enter your email"
                 type="email"
                 name="email-address"
                 id="email-address"
               />
             </div>
-            <div className="mv3">
-              <label className="db fw6 lh-copy f6" htmlFor="password">
+            <div className="flex flex-col gap-2">
+              <label className="text-sm" htmlFor="password">
                 Password
               </label>
               <input
-                className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
+                className="p-2 rounded-md bg-slate-950 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-violet-500"
+                placeholder="Enter your password"
                 type="password"
                 name="password"
                 id="password"
@@ -69,22 +79,19 @@ export default function Signin({
               />
             </div>
           </fieldset>
-          <div className="">
-            <input
-              onClick={onSubmitSignIn}
-              className="b ph3 pv2 input-reset ba white b--white bg-transparent grow pointer f6 dib"
-              type="submit"
-              value="Sign in"
-            />
-          </div>
-          <div className="lh-copy mt3">
-            <p
-              onClick={() => onRouteChange("register")}
-              className="f6 link dim white db pointer"
-            >
-              Register
-            </p>
-          </div>
+          <button
+            className="bg-violet-700 p-2 rounded-md mt-2 font-bold"
+            onClick={onSubmitSignIn}
+            type="submit"
+          >
+            Sign In
+          </button>
+          <a
+            className="text-violet-500 mt-2 m-auto font-bold cursor-pointer"
+            onClick={() => onRouteChange("register")}
+          >
+            Register
+          </a>
         </div>
       </main>
     </article>

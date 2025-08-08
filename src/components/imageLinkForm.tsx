@@ -7,18 +7,21 @@ const ImageLinkForm = ({
 }) => {
   return (
     <div>
-      <p className="f3 center tc">
-        {"This Magic Brain will detect faces in your pictures. Git it a try."}
+      <p className="text-center text-lg my-4 text-slate-400">
+        This Magic Brain will detect faces in your pictures. Git it a try.
       </p>
-      <div className="center">
-        <div className="center pa4 br3 shadow-5 bg-white-op">
-          <input className="f4 pa2 w-70 center" onChange={onInputChange} />
+      <div className="flex justify-center">
+        <div className="p-4 rounded-md bg-slate-900 gap-4 flex">
+          <input
+            className="p-2 rounded-md bg-slate-950 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-violet-500"
+            placeholder="Enter your image URL"
+            onChange={onInputChange}
+          />
           <button
-            type="button"
-            className="w-30 grow f4 link ph3 pv2 dib white bg-dark-pink"
+            className="bg-violet-700 p-2 rounded-md font-bold cursor-pointer"
             onClick={onSubmit}
           >
-            Detect
+            Detect Faces
           </button>
         </div>
       </div>

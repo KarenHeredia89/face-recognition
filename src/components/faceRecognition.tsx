@@ -9,8 +9,8 @@ const FaceRecognition = ({
   boxes: any[];
 }) => {
   return (
-    <div className="center">
-      <div className="absolute mt2">
+    <div className="flex justify-center">
+      <div className="absolute mt-8">
         <img
           id="inputImage"
           alt=""
@@ -21,7 +21,6 @@ const FaceRecognition = ({
 
         {boxes.map((box) => (
           <div
-            className="bounding-box"
             style={{
               top: box.topRow,
               right: box.rightCol,

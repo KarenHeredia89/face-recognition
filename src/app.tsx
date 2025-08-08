@@ -1,5 +1,4 @@
 import { useState } from "react";
-import ParticlesBg from "particles-bg";
 import Navigation from "./components/navigation";
 import Logo from "./components/logo";
 import ImageLinkForm from "./components/imageLinkForm";
@@ -108,22 +107,22 @@ export default function App() {
     setRoute(route);
   };
   return (
-    <div className="App">
-      <ParticlesBg color="#2f1dd3" type="cobweb" bg={true} />
+    <>
       <Navigation onRouteChange={onRouteChange} isSignedIn={isSignedIn} />
-
-      {route === "home" ? (
-        <>
-          <Logo />
-          <Rank name={user.name} entries={user.entries} />
-          <ImageLinkForm onInputChange={onInputChange} onSubmit={onSubmit} />
-          <FaceRecognition boxes={boxes} imageURL={imageURL} />
-        </>
-      ) : route === "signin" ? (
-        <Signin onRouteChange={onRouteChange} loadUser={loadUser} />
-      ) : (
-        <Register onRouteChange={onRouteChange} loadUser={loadUser} />
-      )}
-    </div>
+      <div className="bg-slate-950 h-[calc(100vh-36px)] text-white flex flex-col items-center p-8">
+        {route === "home" ? (
+          <>
+            <Logo />
+            <Rank name={user.name} entries={user.entries} />
+            <ImageLinkForm onInputChange={onInputChange} onSubmit={onSubmit} />
+            <FaceRecognition boxes={boxes} imageURL={imageURL} />
+          </>
+        ) : route === "signin" ? (
+          <Signin onRouteChange={onRouteChange} loadUser={loadUser} />
+        ) : (
+          <Register onRouteChange={onRouteChange} loadUser={loadUser} />
+        )}
+      </div>
+    </>
   );
 }
