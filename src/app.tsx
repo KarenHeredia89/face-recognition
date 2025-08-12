@@ -6,6 +6,7 @@ import Rank from "./components/rank";
 import FaceRecognition from "./components/faceRecognition";
 import Signin from "./components/signin";
 import Register from "./components/register";
+import { ThemeProvider } from "@/components/themeProvider";
 
 interface User {
   id: string;
@@ -107,9 +108,9 @@ export default function App() {
     setRoute(route);
   };
   return (
-    <>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <Navigation onRouteChange={onRouteChange} isSignedIn={isSignedIn} />
-      <div className="bg-slate-950 h-[calc(100vh-36px)] text-white flex flex-col items-center p-8">
+      <div className="bg-slate-950 h-[calc(100vh-48px)] text-white flex flex-col items-center p-8">
         {route === "home" ? (
           <>
             <Logo />
@@ -123,6 +124,6 @@ export default function App() {
           <Register onRouteChange={onRouteChange} loadUser={loadUser} />
         )}
       </div>
-    </>
+    </ThemeProvider>
   );
 }
