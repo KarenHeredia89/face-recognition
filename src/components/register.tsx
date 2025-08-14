@@ -1,13 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import brain from "@/assets/brain.png";
+import { useAuth } from "@/components/hooks/useAuth";
+import AppInput from "@/components/appInput";
 
-export default function Register({
-  onRouteChange,
-  loadUser,
-}: {
-  onRouteChange: (route: string) => void;
-  loadUser: (user: any) => void;
-}) {
+export default function Register() {
+  const { register } = useAuth();
+  const navigate = useNavigate();
   const [registerName, setName] = useState("");
   const [registerEmail, setEmail] = useState("");
   const [registerPassword, setPassword] = useState("");
@@ -21,27 +20,15 @@ export default function Register({
   const onPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
-  const onSubmitRegister = () => {
+  const onSubmitRegister = async () => {
     if (!registerName || !registerEmail || !registerPassword) {
       alert("Please enter your name, email and password");
       return;
     }
-    fetch("http://localhost:8000/register", {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: registerName,
-        email: registerEmail,
-        password: registerPassword,
-      }),
-    })
-      .then((response) => response.json())
-      .then((user) => {
-        if (user.id) {
-          loadUser(user);
-          onRouteChange("home");
-        }
-      });
+    const user = await register(registerName, registerEmail, registerPassword);
+    if (user?.id) {
+      navigate("/home");
+    }
   };
 
   return (
@@ -56,45 +43,30 @@ export default function Register({
             <p className="text-sm text-slate-400">
               Please enter your name, email and password to create an account.
             </p>
-            <div className="flex flex-col gap-2">
-              <label className="text-sm" htmlFor="name">
-                Name
-              </label>
-              <input
-                className="p-2 rounded-md bg-slate-950 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-violet-500"
-                placeholder="Enter your name"
-                type="text"
-                name="name"
-                id="name"
-                onChange={onNameChange}
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <label className="text-sm" htmlFor="email-address">
-                Email
-              </label>
-              <input
-                className="p-2 rounded-md bg-slate-950 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-violet-500"
-                placeholder="Enter your email"
-                type="email"
-                name="email-address"
-                id="email-address"
-                onChange={onEmailChange}
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <label className="text-sm" htmlFor="password">
-                Password
-              </label>
-              <input
-                className="p-2 rounded-md bg-slate-950 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-violet-500"
-                placeholder="Enter your password"
-                type="password"
-                name="password"
-                id="password"
-                onChange={onPasswordChange}
-              />
-            </div>
+            <AppInput
+              label="Name"
+              name="name"
+              type="text"
+              onChange={onNameChange}
+              value={registerName}
+              placeholder="Enter your name"
+            />
+            <AppInput
+              label="Email"
+              name="email"
+              type="email"
+              onChange={onEmailChange}
+              value={registerEmail}
+              placeholder="Enter your email"
+            />
+            <AppInput
+              label="Password"
+              name="password"
+              type="password"
+              onChange={onPasswordChange}
+              value={registerPassword}
+              placeholder="Enter your password"
+            />
           </fieldset>
           <button
             onClick={onSubmitRegister}
@@ -105,7 +77,7 @@ export default function Register({
           </button>
           <a
             className="text-violet-500 mt-2 m-auto font-bold cursor-pointer"
-            onClick={() => onRouteChange("signin")}
+            onClick={() => navigate("/signin")}
           >
             Sign In
           </a>

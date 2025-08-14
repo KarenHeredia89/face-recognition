@@ -1,15 +1,16 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import brain from "@/assets/brain.png";
+import { useAuth } from "@/components/hooks/useAuth";
+import AppInput from "@/components/appInput";
 
-export default function Signin({
-  onRouteChange,
-  loadUser,
-}: {
-  onRouteChange: (route: string) => void;
-  loadUser: (user: any) => void;
-}) {
+export default function Signin() {
+  const { signIn } = useAuth();
+  const navigate = useNavigate();
   const [signInEmail, setSignInEmail] = useState("");
   const [signInPassword, setSignInPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSignInEmail(e.target.value);
@@ -18,26 +19,23 @@ export default function Signin({
     setSignInPassword(e.target.value);
   };
 
-  const onSubmitSignIn = () => {
+  const onSubmitSignIn = async () => {
     if (!signInEmail || !signInPassword) {
-      alert("Please enter your email and password");
+      setError("Please enter your email and password.");
       return;
     }
-    fetch("http://localhost:8000/signin", {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: signInEmail,
-        password: signInPassword,
-      }),
-    })
-      .then((response) => response.json())
-      .then((user) => {
-        if (user.id) {
-          loadUser(user);
-          onRouteChange("home");
-        }
-      });
+
+    setLoading(true);
+    setError(null);
+
+    const user = await signIn(signInEmail, signInPassword);
+    setLoading(false);
+
+    if (user) {
+      navigate("/home");
+    } else {
+      setError("Incorrect email or password. Please try again.");
+    }
   };
 
   return (
@@ -52,43 +50,35 @@ export default function Signin({
             <p className="text-sm text-slate-400">
               Please enter your email and password to login to your account.
             </p>
-            <div className="flex flex-col gap-2">
-              <label className="text-sm" htmlFor="email-address">
-                Email
-              </label>
-              <input
-                onChange={onEmailChange}
-                className="p-2 rounded-md bg-slate-950 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-violet-500"
-                placeholder="Enter your email"
-                type="email"
-                name="email-address"
-                id="email-address"
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <label className="text-sm" htmlFor="password">
-                Password
-              </label>
-              <input
-                className="p-2 rounded-md bg-slate-950 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-violet-500"
-                placeholder="Enter your password"
-                type="password"
-                name="password"
-                id="password"
-                onChange={onPasswordChange}
-              />
-            </div>
+            <AppInput
+              label="Email"
+              name="email"
+              type="email"
+              onChange={onEmailChange}
+              value={signInEmail}
+              placeholder="Enter your email"
+            />
+            <AppInput
+              label="Password"
+              name="password"
+              type="password"
+              onChange={onPasswordChange}
+              value={signInPassword}
+              placeholder="Enter your password"
+            />
           </fieldset>
+          {error && <p className="text-red-500 mt-2">{error}</p>}
           <button
             className="bg-violet-700 p-2 rounded-md mt-2 font-bold"
             onClick={onSubmitSignIn}
             type="submit"
+            disabled={loading}
           >
-            Sign In
+            {loading ? "Logging in..." : "Sign In"}
           </button>
           <a
             className="text-violet-500 mt-2 m-auto font-bold cursor-pointer"
-            onClick={() => onRouteChange("register")}
+            onClick={() => navigate("/register")}
           >
             Register
           </a>

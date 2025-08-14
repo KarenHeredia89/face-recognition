@@ -1,3 +1,6 @@
+import AppInput from "@/components/appInput";
+import { Button } from "@/components/ui/button";
+
 const ImageLinkForm = ({
   onInputChange,
   onSubmit,
@@ -11,18 +14,19 @@ const ImageLinkForm = ({
         This Magic Brain will detect faces in your pictures. Git it a try.
       </p>
       <div className="flex justify-center">
-        <div className="p-4 rounded-md bg-slate-900 gap-4 flex">
-          <input
-            className="p-2 rounded-md bg-slate-950 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-violet-500"
+        <div className="p-4 rounded-md bg-slate-900 gap-4 flex items-center justify-center">
+          <AppInput
             placeholder="Enter your image URL"
             onChange={onInputChange}
+            name="imageURL"
+            type="text"
           />
-          <button
-            className="bg-violet-700 p-2 rounded-md font-bold cursor-pointer"
+          <Button
+            className="bg-violet-700 text-white hover:bg-violet-600 rounded-md font-bold cursor-pointer"
             onClick={onSubmit}
           >
             Detect Faces
-          </button>
+          </Button>
         </div>
       </div>
     </div>
