@@ -3,29 +3,64 @@ import { useNavigate } from "react-router-dom";
 import brain from "@/assets/brain.png";
 import { useAuth } from "@/components/hooks/useAuth";
 import AppInput from "@/components/appInput";
+import { Button } from "@/components/ui/button";
 
 export default function Register() {
   const { register } = useAuth();
   const navigate = useNavigate();
-  const [registerName, setName] = useState("");
-  const [registerEmail, setEmail] = useState("");
-  const [registerPassword, setPassword] = useState("");
+  const [registerForm, setRegisterForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState<string | null>(null);
 
-  const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
+  const onFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setError(null);
+    const { name, value } = e.target;
+    setRegisterForm((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
-  const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-  const onPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
+
+  const inputs = [
+    {
+      label: "Name",
+      name: "name",
+      type: "text",
+      onChange: onFormChange,
+      value: registerForm.name,
+      placeholder: "Enter your name",
+    },
+    {
+      label: "Email",
+      name: "email",
+      type: "email",
+      onChange: onFormChange,
+      value: registerForm.email,
+      placeholder: "Enter your email",
+    },
+    {
+      label: "Password",
+      name: "password",
+      type: "password",
+      onChange: onFormChange,
+      value: registerForm.password,
+      placeholder: "Enter your password",
+    },
+  ];
+
   const onSubmitRegister = async () => {
-    if (!registerName || !registerEmail || !registerPassword) {
-      alert("Please enter your name, email and password");
+    if (!registerForm.name || !registerForm.email || !registerForm.password) {
+      setError("Please enter your name, email and password");
       return;
     }
-    const user = await register(registerName, registerEmail, registerPassword);
+    const user = await register(
+      registerForm.name,
+      registerForm.email,
+      registerForm.password
+    );
     if (user?.id) {
       navigate("/home");
     }
@@ -43,44 +78,25 @@ export default function Register() {
             <p className="text-sm text-slate-400">
               Please enter your name, email and password to create an account.
             </p>
-            <AppInput
-              label="Name"
-              name="name"
-              type="text"
-              onChange={onNameChange}
-              value={registerName}
-              placeholder="Enter your name"
-            />
-            <AppInput
-              label="Email"
-              name="email"
-              type="email"
-              onChange={onEmailChange}
-              value={registerEmail}
-              placeholder="Enter your email"
-            />
-            <AppInput
-              label="Password"
-              name="password"
-              type="password"
-              onChange={onPasswordChange}
-              value={registerPassword}
-              placeholder="Enter your password"
-            />
+            {inputs.map((input, i) => (
+              <AppInput key={i} {...input} />
+            ))}
           </fieldset>
-          <button
+          {error && <p className="text-red-500 mt-2">{error}</p>}
+          <Button
             onClick={onSubmitRegister}
-            className="bg-violet-700 p-2 rounded-md mt-2 font-bold"
+            className="mt-6 bg-violet-700 text-white hover:bg-violet-600 font-bold cursor-pointer"
             type="submit"
           >
             Register
-          </button>
-          <a
-            className="text-violet-500 mt-2 m-auto font-bold cursor-pointer"
+          </Button>
+          <Button
+            variant="ghost"
+            className="text-violet-500 font-bold cursor-pointer"
             onClick={() => navigate("/signin")}
           >
             Sign In
-          </a>
+          </Button>
         </div>
       </main>
     </article>

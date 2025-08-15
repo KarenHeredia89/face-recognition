@@ -1,21 +1,26 @@
-import { useState } from "react";
-import type { User } from "@/types/types";
+import { useAuthStore } from "@/store/authStore";
 
 interface ImageProps {
   imageURL: string;
   boxes: any[];
   input: string;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSubmit: (currentUser: User) => Promise<void>;
-  setImageURL: React.Dispatch<React.SetStateAction<string>>;
-  setBoxes: React.Dispatch<React.SetStateAction<any[]>>;
-  setInput: React.Dispatch<React.SetStateAction<string>>;
+  onSubmit: () => void;
+  clearImageState: () => void;
 }
 
-export const useImage = (updateUser: (user: User) => void): ImageProps => {
-  const [input, setInput] = useState("");
-  const [imageURL, setImageURL] = useState("");
-  const [boxes, setBoxes] = useState<any[]>([]);
+export const useImage = (): ImageProps => {
+  const {
+    user,
+    updateUser,
+    imageURL,
+    input,
+    boxes,
+    setImageURL,
+    setInput,
+    setBoxes,
+    clearImageState,
+  } = useAuthStore();
 
   const calculateRegions = (data: any) => {
     const regions = data.data.regions;
@@ -44,34 +49,47 @@ export const useImage = (updateUser: (user: User) => void): ImageProps => {
     setInput(e.target.value);
   };
 
-  const onSubmit = async (currentUser: User) => {
-    setImageURL(input);
+  const onSubmit = async () => {
+    const submittedURL = input;
+    setInput("");
+    setImageURL(submittedURL);
+    setBoxes([]);
+    if (!user) return;
 
     try {
+      const token = localStorage.getItem("token");
+
       const clarifaiResponse = await fetch(
         `${import.meta.env.VITE_API_URL}/imageurl`,
         {
           method: "post",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
           body: JSON.stringify({ input }),
         }
       );
       const result = await clarifaiResponse.json();
-      displayFaceBox(calculateRegions(result));
 
       const imageResponse = await fetch(
         `${import.meta.env.VITE_API_URL}/image`,
         {
           method: "put",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id: currentUser.id }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ id: user.id }),
         }
       );
       const entries = await imageResponse.json();
 
-      updateUser({ ...currentUser, entries });
+      updateUser({ ...user, entries });
+      displayFaceBox(calculateRegions(result));
     } catch (err) {
       console.error(err);
+      clearImageState();
     }
   };
 
@@ -81,8 +99,6 @@ export const useImage = (updateUser: (user: User) => void): ImageProps => {
     input,
     onInputChange,
     onSubmit,
-    setImageURL,
-    setBoxes,
-    setInput,
+    clearImageState,
   };
 };

@@ -2,9 +2,11 @@ import AppInput from "@/components/appInput";
 import { Button } from "@/components/ui/button";
 
 const ImageLinkForm = ({
+  input,
   onInputChange,
   onSubmit,
 }: {
+  input: string;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: () => void;
 }) => {
@@ -20,6 +22,7 @@ const ImageLinkForm = ({
             onChange={onInputChange}
             name="imageURL"
             type="text"
+            value={input}
           />
           <Button
             className="bg-violet-700 text-white hover:bg-violet-600 rounded-md font-bold cursor-pointer"

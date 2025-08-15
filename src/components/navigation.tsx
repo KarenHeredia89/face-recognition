@@ -25,7 +25,7 @@ const Navigation = () => {
       {user ? (
         <DropdownMenu>
           <DropdownMenuTrigger className="flex items-center gap-1">
-            <Avatar className="bg-violet-500 flex items-center justify-center">
+            <Avatar className="bg-slate-500 flex items-center justify-center">
               <User className="size-6 text-white" />
             </Avatar>
             <ChevronsUpDown className="size-4 text-white" />

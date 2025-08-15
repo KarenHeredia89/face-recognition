@@ -1,11 +1,14 @@
 import { useState } from "react";
 import type { User } from "@/types/types";
+import { useAuthStore } from "@/store/authStore";
 
-export const useUser = (loadUser: (user: User) => void) => {
+export const useUser = () => {
+  const { updateUser } = useAuthStore();
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const updateUser = async (
+  const updateUserProfile = async (
     id: number,
     name: string,
     age: number
@@ -13,11 +16,16 @@ export const useUser = (loadUser: (user: User) => void) => {
     setLoading(true);
     setError(null);
     try {
+      const token = localStorage.getItem("token");
+
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/profile/${id}`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
           body: JSON.stringify({ formInput: { name, age } }),
         }
       );
@@ -27,7 +35,7 @@ export const useUser = (loadUser: (user: User) => void) => {
       }
 
       const updatedUser: User = await response.json();
-      loadUser(updatedUser);
+      updateUser(updatedUser);
 
       return updatedUser;
     } catch (err) {
@@ -39,5 +47,5 @@ export const useUser = (loadUser: (user: User) => void) => {
     }
   };
 
-  return { updateUser, loading, error };
+  return { updateUserProfile, loading, error };
 };

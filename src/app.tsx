@@ -27,10 +27,10 @@ export default function App() {
         <Routes>
           <Route path="/signin" element={<Signin />} />
           <Route path="/register" element={<Register />} />
-          <Route
+          {/* <Route
             path="/"
-            element={<Navigate to={user ? "/home" : "/signin"} />}
-          />
+            element={<Navigate to={user ? "/home" : "/signin"} replace />}
+          /> */}
           <Route
             path="/home"
             element={

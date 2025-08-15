@@ -6,15 +6,17 @@ import Rank from "@/components/rank";
 import FaceRecognition from "@/components/faceRecognition";
 
 export default function Home() {
-  const { user, loadUser } = useAuth();
-  const { imageURL, boxes, onInputChange, onSubmit } = useImage(loadUser);
+  const { user } = useAuth();
+  const { imageURL, input, boxes, onInputChange, onSubmit } = useImage();
+
   return (
     <>
       <Logo />
       <Rank name={user?.name || ""} entries={user?.entries || 0} />
       <ImageLinkForm
+        input={input}
         onInputChange={onInputChange}
-        onSubmit={() => user && onSubmit(user)}
+        onSubmit={onSubmit}
       />
       <FaceRecognition boxes={boxes} imageURL={imageURL} />
     </>

@@ -3,24 +3,48 @@ import { useNavigate } from "react-router-dom";
 import brain from "@/assets/brain.png";
 import { useAuth } from "@/components/hooks/useAuth";
 import AppInput from "@/components/appInput";
+import { Button } from "@/components/ui/button";
 
 export default function Signin() {
   const { signIn } = useAuth();
   const navigate = useNavigate();
-  const [signInEmail, setSignInEmail] = useState("");
-  const [signInPassword, setSignInPassword] = useState("");
+  const [registerForm, setRegisterForm] = useState({
+    email: "",
+    password: "",
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSignInEmail(e.target.value);
-  };
-  const onPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSignInPassword(e.target.value);
+  const onFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setError(null);
+    const { name, value } = e.target;
+    setRegisterForm((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
+  const inputs = [
+    {
+      label: "Email",
+      name: "email",
+      type: "email",
+      onChange: onFormChange,
+      value: registerForm.email,
+      placeholder: "Enter your email",
+    },
+    {
+      label: "Password",
+      name: "password",
+      type: "password",
+      onChange: onFormChange,
+      value: registerForm.password,
+      placeholder: "Enter your password",
+    },
+  ];
+
   const onSubmitSignIn = async () => {
-    if (!signInEmail || !signInPassword) {
+    if (!registerForm.email || !registerForm.password) {
       setError("Please enter your email and password.");
       return;
     }
@@ -28,7 +52,7 @@ export default function Signin() {
     setLoading(true);
     setError(null);
 
-    const user = await signIn(signInEmail, signInPassword);
+    const user = await signIn(registerForm.email, registerForm.password);
     setLoading(false);
 
     if (user) {
@@ -50,38 +74,26 @@ export default function Signin() {
             <p className="text-sm text-slate-400">
               Please enter your email and password to login to your account.
             </p>
-            <AppInput
-              label="Email"
-              name="email"
-              type="email"
-              onChange={onEmailChange}
-              value={signInEmail}
-              placeholder="Enter your email"
-            />
-            <AppInput
-              label="Password"
-              name="password"
-              type="password"
-              onChange={onPasswordChange}
-              value={signInPassword}
-              placeholder="Enter your password"
-            />
+            {inputs.map((input, i) => (
+              <AppInput key={i} {...input} />
+            ))}
           </fieldset>
           {error && <p className="text-red-500 mt-2">{error}</p>}
-          <button
-            className="bg-violet-700 p-2 rounded-md mt-2 font-bold"
+          <Button
+            className="mt-6 bg-violet-700 text-white hover:bg-violet-600 font-bold cursor-pointer"
             onClick={onSubmitSignIn}
             type="submit"
             disabled={loading}
           >
             {loading ? "Logging in..." : "Sign In"}
-          </button>
-          <a
-            className="text-violet-500 mt-2 m-auto font-bold cursor-pointer"
+          </Button>
+          <Button
+            variant="ghost"
+            className="text-violet-500 font-bold cursor-pointer"
             onClick={() => navigate("/register")}
           >
             Register
-          </a>
+          </Button>
         </div>
       </main>
     </article>
