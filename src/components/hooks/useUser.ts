@@ -10,8 +10,7 @@ export const useUser = () => {
 
   const updateUserProfile = async (
     id: number,
-    name: string,
-    age: number
+    name: string
   ): Promise<User | null> => {
     setLoading(true);
     setError(null);
@@ -26,7 +25,7 @@ export const useUser = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ formInput: { name, age } }),
+          body: JSON.stringify({ formInput: { name } }),
         }
       );
 

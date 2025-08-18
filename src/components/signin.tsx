@@ -6,13 +6,12 @@ import AppInput from "@/components/appInput";
 import { Button } from "@/components/ui/button";
 
 export default function Signin() {
-  const { signIn } = useAuth();
+  const { signIn, errors, isLoading } = useAuth();
   const navigate = useNavigate();
   const [registerForm, setRegisterForm] = useState({
     email: "",
     password: "",
   });
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const onFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,6 +31,7 @@ export default function Signin() {
       onChange: onFormChange,
       value: registerForm.email,
       placeholder: "Enter your email",
+      error: errors?.email,
     },
     {
       label: "Password",
@@ -40,20 +40,12 @@ export default function Signin() {
       onChange: onFormChange,
       value: registerForm.password,
       placeholder: "Enter your password",
+      error: errors?.password,
     },
   ];
 
   const onSubmitSignIn = async () => {
-    if (!registerForm.email || !registerForm.password) {
-      setError("Please enter your email and password.");
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
     const user = await signIn(registerForm.email, registerForm.password);
-    setLoading(false);
 
     if (user) {
       navigate("/home");
@@ -78,14 +70,17 @@ export default function Signin() {
               <AppInput key={i} {...input} />
             ))}
           </fieldset>
-          {error && <p className="text-red-500 mt-2">{error}</p>}
+          {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
+          {errors?.general && (
+            <p className="text-sm text-red-500 mt-2">{errors.general}</p>
+          )}
           <Button
             className="mt-6 bg-violet-700 text-white hover:bg-violet-600 font-bold cursor-pointer"
             onClick={onSubmitSignIn}
             type="submit"
-            disabled={loading}
+            disabled={isLoading}
           >
-            {loading ? "Logging in..." : "Sign In"}
+            {isLoading ? "Logging in..." : "Sign In"}
           </Button>
           <Button
             variant="ghost"

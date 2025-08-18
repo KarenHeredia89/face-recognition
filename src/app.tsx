@@ -27,10 +27,6 @@ export default function App() {
         <Routes>
           <Route path="/signin" element={<Signin />} />
           <Route path="/register" element={<Register />} />
-          {/* <Route
-            path="/"
-            element={<Navigate to={user ? "/home" : "/signin"} replace />}
-          /> */}
           <Route
             path="/home"
             element={
@@ -38,6 +34,10 @@ export default function App() {
                 <Home />
               </ProtectedRoute>
             }
+          />
+          <Route
+            path="/"
+            element={<Navigate to={user ? "/home" : "/signin"} replace />}
           />
         </Routes>
       </div>

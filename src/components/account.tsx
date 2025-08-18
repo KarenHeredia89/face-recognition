@@ -29,7 +29,6 @@ export default function Account() {
   const { updateUserProfile } = useUser();
   const [formInput, setFormInput] = useState({
     name: "",
-    age: 0,
   });
   const [open, setOpen] = useState(false);
 
@@ -37,7 +36,6 @@ export default function Account() {
     if (user) {
       setFormInput({
         name: user.name,
-        age: Number(user?.age || 0),
       });
     }
   }, [user]);
@@ -52,7 +50,7 @@ export default function Account() {
   };
 
   const onSubmit = () => {
-    updateUserProfile(user.id, formInput.name, Number(formInput.age));
+    updateUserProfile(user.id, formInput.name);
     setOpen(false);
   };
 
@@ -93,14 +91,6 @@ export default function Account() {
             onChange={onHandleChangeInput}
             value={formInput.name}
             placeholder="Enter your name"
-          />
-          <AppInput
-            label="Age"
-            name="age"
-            type="number"
-            onChange={onHandleChangeInput}
-            value={formInput.age}
-            placeholder="Enter your age"
           />
 
           <DialogFooter className="mt-4">

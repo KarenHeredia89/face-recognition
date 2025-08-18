@@ -8,6 +8,7 @@ interface InputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value?: string | number;
   placeholder: string;
+  error?: string;
 }
 
 export default function AppInput({
@@ -17,6 +18,7 @@ export default function AppInput({
   onChange,
   value,
   placeholder,
+  error,
 }: InputProps) {
   return (
     <div className="flex flex-col gap-2">
@@ -29,6 +31,7 @@ export default function AppInput({
         value={value}
         placeholder={placeholder}
       />
+      {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
     </div>
   );
 }

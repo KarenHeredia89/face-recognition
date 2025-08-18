@@ -6,7 +6,7 @@ import AppInput from "@/components/appInput";
 import { Button } from "@/components/ui/button";
 
 export default function Register() {
-  const { register } = useAuth();
+  const { register, errors, isLoading } = useAuth();
   const navigate = useNavigate();
   const [registerForm, setRegisterForm] = useState({
     name: "",
@@ -32,6 +32,7 @@ export default function Register() {
       onChange: onFormChange,
       value: registerForm.name,
       placeholder: "Enter your name",
+      error: errors?.name,
     },
     {
       label: "Email",
@@ -40,6 +41,7 @@ export default function Register() {
       onChange: onFormChange,
       value: registerForm.email,
       placeholder: "Enter your email",
+      error: errors?.email,
     },
     {
       label: "Password",
@@ -48,6 +50,7 @@ export default function Register() {
       onChange: onFormChange,
       value: registerForm.password,
       placeholder: "Enter your password",
+      error: errors?.password,
     },
   ];
 
@@ -82,13 +85,17 @@ export default function Register() {
               <AppInput key={i} {...input} />
             ))}
           </fieldset>
-          {error && <p className="text-red-500 mt-2">{error}</p>}
+          {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
+          {errors?.general && (
+            <p className="text-sm text-red-500 mt-2">{errors.general}</p>
+          )}
           <Button
             onClick={onSubmitRegister}
             className="mt-6 bg-violet-700 text-white hover:bg-violet-600 font-bold cursor-pointer"
             type="submit"
+            disabled={isLoading}
           >
-            Register
+            {isLoading ? "Registering..." : "Register"}
           </Button>
           <Button
             variant="ghost"
